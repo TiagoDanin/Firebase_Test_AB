@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "550962576645",
+    "project_id": "remote-config-talk",
+    "storage_bucket": "remote-config-talk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550962576645:android:25852fa240eda751508b6c",
+        "android_client_info": {
+          "package_name": "com.tiagodanin.firebase_test_ab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgc3jgS_LnO-NYVmdnuHd6PjNFrjprh1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

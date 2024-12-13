@@ -1,7 +1,69 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class ABTestPage extends StatelessWidget {
   const ABTestPage({super.key});
+
+  Color getButtonColor(String buttonColorName) {
+    switch (buttonColorName) {
+      case 'VERMELHO':
+        return Colors.red;
+      case 'AZUL':
+        return Colors.blue;
+      case 'AMARELO':
+        return Colors.yellow;
+      case 'VERDE':
+        return Colors.green;
+      default:
+        return Colors.white;
+    }
+  }
+
+  Widget getSignUpButton(BuildContext context) {
+    final String buttonType =
+        FirebaseRemoteConfig.instance.getString('TIPO_DO_BOTAO');
+    final String buttonColorName =
+        FirebaseRemoteConfig.instance.getString('COR_DO_BOTAO');
+    final Color buttonColor = getButtonColor(buttonColorName);
+
+    print('Button type: $buttonType - $buttonColorName');
+
+    FirebaseRemoteConfig.instance.fetchAndActivate();
+    FirebaseAnalytics.instance.setUserId(id: const Uuid().v4());
+
+    if (buttonType == 'OUTLINED') {
+      return OutlinedButton(
+        onPressed: () {
+          showSignUpDialog(context);
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(
+            width: 3.0,
+            color: buttonColor,
+          ),
+        ),
+        child: const Text(
+          'Cadastrar-se',
+          style: TextStyle(color: Colors.black),
+        ),
+      );
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          showSignUpDialog(context);
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonColor,
+        ),
+        child: const Text(
+          'Cadastrar-se',
+          style: TextStyle(color: Colors.black),
+        ),
+      );
+    }
+  }
 
   void showUnderConstructionDialog(BuildContext context) {
     showDialog(
@@ -47,12 +109,14 @@ class ABTestPage extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                FirebaseAnalytics.instance.logEvent(name: 'sign_up_cancelled');
               },
               child: const Text('Cancelar'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                FirebaseAnalytics.instance.logEvent(name: 'sign_up_done');
               },
               child: const Text('Enviar'),
             ),
@@ -75,7 +139,8 @@ class ABTestPage extends StatelessWidget {
           children: <Widget>[
             const CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage('https://i.pravatar.cc/150'),
+              backgroundImage:
+                  NetworkImage('https://avatar.iran.liara.run/public'),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -90,12 +155,7 @@ class ABTestPage extends StatelessWidget {
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  showSignUpDialog(context);
-                },
-                child: const Text('Cadastrar-se'),
-              ),
+              child: getSignUpButton(context),
             ),
             const SizedBox(height: 8),
             SizedBox(
